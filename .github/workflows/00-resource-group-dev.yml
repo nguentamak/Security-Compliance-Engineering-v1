@@ -34,6 +34,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID_DEV }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
 
       - name: Terraform Init (dev backend)
         run: terraform init -reconfigure -backend-config=../../env/dev/backend/00-resource-group.hcl
@@ -48,7 +49,6 @@ jobs:
     if: github.event_name == 'push'
     needs: plan
     runs-on: ubuntu-latest
-    environment: dev
     defaults:
       run:
         working-directory: infra/components/00-resource-group
@@ -61,6 +61,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID_DEV }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
 
       - name: Terraform Init (dev backend)
         run: terraform init -reconfigure -backend-config=../../env/dev/backend/00-resource-group.hcl
