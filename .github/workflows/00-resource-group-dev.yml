@@ -1,0 +1,67 @@
+name: 00-resource-group-dev
+
+on:
+  pull_request:
+    paths:
+      - "infra/components/00-resource-group/**"
+      - "infra/env/dev/**"
+      - ".github/workflows/00-resource-group-dev.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "infra/components/00-resource-group/**"
+      - "infra/env/dev/**"
+      - ".github/workflows/00-resource-group-dev.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra/components/00-resource-group
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - uses: Azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID_DEV }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init (dev backend)
+        run: terraform init -reconfigure -backend-config=../../env/dev/backend/00-resource-group.hcl
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan (dev tfvars)
+        run: terraform plan -var-file=../../env/dev/tfvars/00-resource-group.tfvars
+
+  apply:
+    if: github.event_name == 'push'
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        working-directory: infra/components/00-resource-group
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - uses: Azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID_DEV }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init (dev backend)
+        run: terraform init -reconfigure -backend-config=../../env/dev/backend/00-resource-group.hcl
+
+      - name: Terraform Apply (dev tfvars)
+        run: terraform apply -auto-approve -var-file=../../env/dev/tfvars/00-resource-group.tfvars
