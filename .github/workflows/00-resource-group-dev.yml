@@ -6,12 +6,14 @@ on:
       - "infra/components/00-resource-group/**"
       - "infra/env/dev/**"
       - ".github/workflows/00-resource-group-dev.yml"
+      - "README.md"
   push:
     branches: ["main"]
     paths:
       - "infra/components/00-resource-group/**"
       - "infra/env/dev/**"
       - ".github/workflows/00-resource-group-dev.yml"
+      - "README.md"
 
 permissions:
   contents: read
