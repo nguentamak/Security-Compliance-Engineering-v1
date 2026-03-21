@@ -37,7 +37,12 @@ jobs:
           allow-no-subscriptions: true
 
       - name: Terraform Init (dev backend)
-        run: terraform init -reconfigure -backend-config=../../envs/dev/backend/00-resource-group.hcl
+        run: 
+          | 
+          pwd 
+          ls -la 
+          find . -type f | sort | grep "00-resource-group.hcl" || true
+          terraform init -reconfigure -backend-config=../../envs/dev/backend/00-resource-group.hcl
 
       - name: Terraform Validate
         run: terraform validate
