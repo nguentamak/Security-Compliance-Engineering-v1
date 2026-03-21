@@ -48,7 +48,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan (dev tfvars)
-        run: terraform plan -var-file=../../envs/dev/tfvars/00-resource-group.tfvars
+        run: terraform plan -var-file=../../../envs/dev/tfvars/00-resource-group.tfvars
 
   apply:
     if: github.event_name == 'push'
@@ -69,7 +69,7 @@ jobs:
           allow-no-subscriptions: true
 
       - name: Terraform Init (dev backend)
-        run: terraform init -reconfigure -backend-config=../../envs/dev/backend/00-resource-group.hcl
+        run: terraform init -reconfigure -backend-config=../../../envs/dev/backend/00-resource-group.hcl
 
       - name: Terraform Apply (dev tfvars)
-        run: terraform apply -auto-approve -var-file=../../envs/dev/tfvars/00-resource-group.tfvars
+        run: terraform apply -auto-approve -var-file=../../../envs/dev/tfvars/00-resource-group.tfvars
