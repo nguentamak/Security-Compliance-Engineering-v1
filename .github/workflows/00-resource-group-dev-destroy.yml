@@ -1,0 +1,31 @@
+name: 00-resource-group-dev-destroy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra/components/00-resource-group
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - uses: Azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID_DEV }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init (dev backend)
+        run: terraform init -reconfigure -backend-config=../../env/dev/backend/00-resource-group.hcl
+
+      # IMPORTANT: on override allow_destroy=true pendant ce job
+      - name: Destroy RG (dev)
+        run: terraform destroy -auto-approve -var-file=../../env/dev/tfvars/00-resource-group.tfvars -var="allow_destroy=true"
