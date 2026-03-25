@@ -24,8 +24,8 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init (dev backend)
-        run: terraform init -reconfigure -backend-config=../../env/dev/backend/00-resource-group.hcl
+        run: terraform init -reconfigure -backend-config=../../../env/dev/backend/00-resource-group.hcl
 
       # IMPORTANT: on override allow_destroy=true pendant ce job
       - name: Destroy RG (dev)
-        run: terraform destroy -auto-approve -var-file=../../env/dev/tfvars/00-resource-group.tfvars -var="allow_destroy=true"
+        run: terraform destroy -auto-approve -var-file=../../../env/dev/tfvars/00-resource-group.tfvars -var="allow_destroy=true"
