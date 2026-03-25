@@ -28,4 +28,4 @@ jobs:
 
       # IMPORTANT: on override allow_destroy=true pendant ce job
       - name: Destroy RG (dev)
-        run: terraform destroy -auto-approve -var-file=../../../envs/dev/tfvars/00-resource-group.tfvars -var="allow_destroy=true"
+        run: terraform destroy -auto-approve -var-file=../../../envs/dev/tfvars/00-resource-group.tfvars
